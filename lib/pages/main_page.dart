@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/core/constans.dart';
-import 'package:personal_notes/widgets/not_grid.dart';
-import 'package:personal_notes/widgets/note_card.dart';
+import 'package:personal_notes/pages/new_or_edit_note.dart';
+import 'package:personal_notes/widgets/note_grid.dart';
+
 import 'package:personal_notes/widgets/note_fab.dart';
+import 'package:personal_notes/widgets/note_icon_button.dart';
+import 'package:personal_notes/widgets/note_icon_button_outline.dart';
 import 'package:personal_notes/widgets/note_list.dart';
 import 'package:personal_notes/search_field.dart';
 
@@ -29,22 +32,20 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text('Personal Notes📒'),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: FaIcon(FontAwesomeIcons.person),
-            style: IconButton.styleFrom(
-              backgroundColor: primary,
-              // foregroundColor: white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(12),
-
-                side: BorderSide(color: Colors.black26),
-              ),
-            ),
+          NoteIconBottonOutline(
+            icon: FontAwesomeIcons.rightFromBracket,
+            OnPressed: () {},
           ),
         ],
       ),
-      floatingActionButton: NoteFab(),
+      floatingActionButton: NoteFab(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewOrEidtNote(isNewnNote: true)),
+          );
+        },
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -54,26 +55,18 @@ class _MainPageState extends State<MainPage> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () {
+                  NoteIconButton(
+                    OnPressed: () {
                       setState(() {
                         isDescending = !isDescending;
                       });
                     },
-                    icon: FaIcon(
-                      isDescending
-                          ? FontAwesomeIcons.arrowDown
-                          : FontAwesomeIcons.arrowUp,
-                    ),
-                    padding: EdgeInsets.zero,
-                    visualDensity: VisualDensity.compact,
-                    constraints: BoxConstraints(),
-                    style: IconButton.styleFrom(
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    iconSize: 18,
-                    color: const Color.fromARGB(255, 73, 71, 71),
+                    icon: isDescending
+                        ? FontAwesomeIcons.arrowDown
+                        : FontAwesomeIcons.arrowUp,
+                        sized: 18,
                   ),
+
                   SizedBox(width: 16),
                   DropdownButton(
                     value: dropDowenValue,
@@ -113,31 +106,23 @@ class _MainPageState extends State<MainPage> {
                     },
                   ),
                   Spacer(),
-                  IconButton(
-                    onPressed: () {
+                  NoteIconButton(
+                    OnPressed: () {
                       setState(() {
                         isGrid = !isGrid;
                       });
                     },
-                    icon: FaIcon(
-                      isGrid
-                          ? FontAwesomeIcons.tableCellsLarge
-                          : FontAwesomeIcons.bars,
-                    ),
-                    padding: EdgeInsets.zero,
-                    visualDensity: VisualDensity.compact,
-                    constraints: BoxConstraints(),
-                    style: IconButton.styleFrom(
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    iconSize: 18,
-                    color: const Color.fromARGB(255, 73, 71, 71),
+                    icon: isGrid
+                        ? FontAwesomeIcons.tableCellsLarge
+                        : FontAwesomeIcons.bars,
+
+                        sized: 18,
                   ),
                 ],
               ),
             ),
 
-            Expanded(child: isGrid ? notsGrid() : NotesList()),
+            Expanded(child: isGrid ? notesGrid() : NotesList()),
           ],
         ),
       ),

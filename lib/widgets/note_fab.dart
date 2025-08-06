@@ -3,7 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/core/constans.dart';
 
 class NoteFab extends StatelessWidget {
-  const NoteFab({super.key});
+  const NoteFab({
+    required this.onPressed
+    ,super.key});
+
+final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class NoteFab extends StatelessWidget {
         ],
       ),
       child: FloatingActionButton(
-        onPressed: () {},
+        onPressed: onPressed,
 
         backgroundColor: primary,
         foregroundColor: Colors.white,
