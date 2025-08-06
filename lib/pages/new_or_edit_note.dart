@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_quill/flutter_quill.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/widgets/note_icon_button.dart';
 import 'package:personal_notes/widgets/note_icon_button_outline.dart';
+import 'package:provider/provider.dart';
 
 class NewOrEidtNote extends StatefulWidget {
   const NewOrEidtNote({required this.isNewnNote, super.key});
@@ -15,24 +17,30 @@ class NewOrEidtNote extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<NewOrEidtNote> {
+  late final NewNoteController newNoteController;
   late final FocusNode focusNode;
 
-  late bool readOnly;
+  //gpt
+  // final NewNoteController = Provider.of<NewNoteController>(context, listen: false);
+
   // late final QuillController quillController;
   // final FocusNode focusNode = FocusNode();
   // final bool readOnly = false;
 
   @override
   void initState() {
+    newNoteController = context.read<NewNoteController>();
     focusNode = FocusNode();
     super.initState();
     // quillController = QuillController.basic();
-    if (widget.isNewnNote) {
-      focusNode.requestFocus();
-      readOnly = false;
-    } else {
-      readOnly = true;
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.isNewnNote) {
+        focusNode.requestFocus();
+        newNoteController.readOnly = false;
+      } else {
+        newNoteController.readOnly = true;
+      }
+    });
   }
 
   @override
@@ -55,21 +63,24 @@ class _MyWidgetState extends State<NewOrEidtNote> {
           ),
         ),
         actions: [
-          NoteIconBottonOutline(
-            OnPressed: () {
-              setState(() {
-                readOnly = !readOnly;
+          Selector<NewNoteController, bool>(
+            selector: (context, newNoteController) =>
+                newNoteController.readOnly,
+            builder: (context, readOnly, child) => NoteIconBottonOutline(
+              icon: readOnly ? FontAwesomeIcons.pen : FontAwesomeIcons.bookOpen,
+              OnPressed: () {
+                newNoteController.readOnly = !readOnly;
 
-                if (readOnly) {
+                if (newNoteController.readOnly) {
                   FocusScope.of(context).unfocus();
                   focusNode.unfocus();
                 } else {
                   focusNode.requestFocus();
                 }
-              });
-            },
-            icon: readOnly ? FontAwesomeIcons.pen : FontAwesomeIcons.bookOpen,
+              },
+            ),
           ),
+
           NoteIconBottonOutline(OnPressed: () {}, icon: FontAwesomeIcons.check),
         ],
       ),
@@ -77,12 +88,19 @@ class _MyWidgetState extends State<NewOrEidtNote> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            TextField(
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                hintText: 'Title here',
-                hintStyle: TextStyle(color: gray300),
-                border: InputBorder.none,
+            Selector<NewNoteController, bool>(
+              selector: (context, controller) => controller.readOnly,
+              builder: (context, readOnly, child) => TextField(
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                decoration: InputDecoration(
+                  hintText: 'Title here',
+                  hintStyle: TextStyle(color: gray300),
+                  border: InputBorder.none,
+                ),
+                canRequestFocus: !readOnly,
+                onChanged: (newvalue) {
+                  newNoteController.title = newvalue;
+                },
               ),
             ),
             if (!widget.isNewnNote) ...[
@@ -135,10 +153,74 @@ class _MyWidgetState extends State<NewOrEidtNote> {
                   flex: 3,
                   child: Row(
                     children: [
-                      Text('taged'),
+                      Text('tags'),
                       NoteIconButton(
                         icon: FontAwesomeIcons.circlePlus,
-                        OnPressed: () {},
+                        OnPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => Center(
+                              child: Material(
+                                child: Container(
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.75,
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        'add tag',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          hintText: 'add tag(< 16 characters)',
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: primary,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: primary,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        child: Text('add tag'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: primary,
+                                          foregroundColor: Colors.white,
+                                          side: BorderSide(color: Colors.black),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -157,27 +239,33 @@ class _MyWidgetState extends State<NewOrEidtNote> {
               child: Divider(color: gray500, thickness: 2),
             ),
             Expanded(
-              child: Column(
-                children: [
-                  TextField(
-                    style: TextStyle(fontSize: 16),
-                    decoration: InputDecoration(
-                      hintText: 'Type here..',
-                      hintStyle: TextStyle(color: gray300),
-                      border: InputBorder.none,
+              child: Selector<NewNoteController, bool>(
+                selector: (_, controller) => controller.readOnly,
+                builder: (_, readOnly, __) => Column(
+                  children: [
+                    TextField(
+                      style: TextStyle(fontSize: 16),
+                      decoration: InputDecoration(
+                        hintText: 'Type here..',
+                        hintStyle: TextStyle(color: gray300),
+                        border: InputBorder.none,
+                      ),
+                      readOnly: readOnly,
+                      focusNode: focusNode,
+
+                      //   child: QuillEditor(
+                      //     controller: quillController,
+                      //     scrollController: ScrollController(),
+
+                      //     focusNode: focusNode,
+                      //   ),
+                      onChanged: (newValue) {
+                        newNoteController.content = newValue;
+                      },
                     ),
-                    readOnly: readOnly,
-                    focusNode: focusNode,
-
-                    //   child: QuillEditor(
-                    //     controller: quillController,
-                    //     scrollController: ScrollController(),
-
-                    //     focusNode: focusNode,
-                    //   ),
-                  ),
-                  // QuillToolbar(controller: quillController),
-                ],
+                    // QuillToolbar(controller: quillController),
+                  ],
+                ),
               ),
             ),
           ],
