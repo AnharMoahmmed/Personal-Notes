@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:personal_notes/widgets/note_card.dart';
 
-class notsGrid extends StatelessWidget {
-  const notsGrid({super.key});
+class notesGrid extends StatelessWidget {
+  const notesGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
