@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/models/note.dart';
 import 'package:personal_notes/pages/new_or_edit_note.dart';
+import 'package:personal_notes/widgets/note_tag.dart';
 
 class NoteCard extends StatelessWidget {
-  NoteCard({required this.isInGrid, required this.note , super.key});
+  NoteCard({required this.isInGrid, required this.note, super.key});
   bool isInGrid = true;
   final Note note;
 
@@ -35,60 +37,56 @@ class NoteCard extends StatelessWidget {
         padding: EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: <Widget>[
-            Text(
-              'This is going to be a title ',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-                color: gray900,
+            if (note.title != null) ...[
+              Text(
+                note.title,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: gray900,
+                ),
               ),
-            ),
-            SizedBox(height: 4),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(
-                  3,
-                  (index) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.0),
-                      color: gray100,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 2.0,
-                    ),
-                    margin: EdgeInsets.only(right: 4.0),
-                    child: Text(
-                      'first chip ',
-                      style: TextStyle(fontSize: 12.0, color: gray700),
-                    ),
+              SizedBox(height: 4),
+            ],
+            if (note.tags != null) ...[
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(
+                    3,
+                    (index) => NoteTag(lable: note.tags![index]),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 4),
-            if (isInGrid)
-              Expanded(
-                child: Text(
-                  'content of notes ',
+              SizedBox(height: 4),
+            ],
+            if (note.content != null) ...[
+              if (isInGrid)
+                Expanded(
+                  child: Text(
+                    note.content,
+                    // note.content!, in case the content be empty use this insted of   note.content,
+                    style: TextStyle(color: gray700),
+                  ),
+                )
+              else
+                Text(
+                  note.content,
                   style: TextStyle(color: gray700),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              )
-            else
-              Text(
-                'content of notes ',
-                style: TextStyle(color: gray700),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
+            ],
             Row(
               children: [
                 Text(
-                  '04 ogest, 2025',
+                  DateFormat('dd MMM , y').format(      
+                    DateTime.fromMicrosecondsSinceEpoch(note.dateCreated),
+                  ),
 
                   style: TextStyle(
                     fontSize: 12.0,

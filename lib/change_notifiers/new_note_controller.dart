@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:personal_notes/change_notifiers/note_provider.dart';
+import 'package:personal_notes/models/note.dart';
+import 'package:provider/provider.dart';
 
 class NewNoteController extends ChangeNotifier {
   bool _readOnly = false;
@@ -24,7 +26,7 @@ class NewNoteController extends ChangeNotifier {
     notifyListeners();
   }
 
-  String get title => _title;
+  String get title => _title.trim();
   String _content = '';
 
   set content(String value) {
@@ -32,7 +34,7 @@ class NewNoteController extends ChangeNotifier {
     notifyListeners();
   }
 
-  String get content => _content;
+  String get content => _content.trim();
 
   List<String> _tags = [];
 
@@ -41,7 +43,27 @@ class NewNoteController extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> get tags => _tags; 
+  List<String> get tags => [..._tags];
+
+  void removeTag(int index) {
+    _tags.removeAt(index);
+    notifyListeners();
+  }
+
+  void saveNote(BuildContext context) {
+    final String? newTitle = title.isNotEmpty ? title : null;
+    final String? newcontent = content.isNotEmpty ? content : null;
+    final now = DateTime.now().microsecondsSinceEpoch;
+    final Note note = Note(
+      title: title,
+      content: content,
+      dateCreated: now,
+      dateModified: now,
+      tags: tags,
+    );
+
+    context.read<NotesProvider>().addNote(note);
+  }
 }
   
   

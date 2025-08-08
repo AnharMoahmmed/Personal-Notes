@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/core/constans.dart';
+import 'package:personal_notes/widgets/dialog_card.dart';
+import 'package:personal_notes/widgets/new_tag_dialog.dart';
 import 'package:personal_notes/widgets/note_icon_button.dart';
 import 'package:personal_notes/widgets/note_icon_button_outline.dart';
+import 'package:personal_notes/widgets/note_tag.dart';
 import 'package:provider/provider.dart';
 
 class NewOrEidtNote extends StatefulWidget {
@@ -81,7 +84,13 @@ class _MyWidgetState extends State<NewOrEidtNote> {
             ),
           ),
 
-          NoteIconBottonOutline(OnPressed: () {}, icon: FontAwesomeIcons.check),
+          NoteIconBottonOutline(
+            OnPressed: () {
+              newNoteController.saveNote(context);
+              Navigator.pop(context);
+            },
+            icon: FontAwesomeIcons.check,
+          ),
         ],
       ),
       body: Padding(
@@ -154,72 +163,18 @@ class _MyWidgetState extends State<NewOrEidtNote> {
                   child: Row(
                     children: [
                       Text('tags'),
+                      SizedBox(width: 4),
                       NoteIconButton(
                         icon: FontAwesomeIcons.circlePlus,
-                        OnPressed: () {
-                          showDialog(
+                        OnPressed: () async {
+                          final String? tag = await showDialog<String?>(
                             context: context,
-                            builder: (context) => Center(
-                              child: Material(
-                                child: Container(
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.75,
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Text(
-                                        'add tag',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      TextField(
-                                        decoration: InputDecoration(
-                                          hintText: 'add tag(< 16 characters)',
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                            borderSide: BorderSide(
-                                              color: primary,
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                            borderSide: BorderSide(
-                                              color: primary,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      ElevatedButton(
-                                        onPressed: () {},
-                                        child: Text('add tag'),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: primary,
-                                          foregroundColor: Colors.white,
-                                          side: BorderSide(color: Colors.black),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                            builder: (context) =>
+                                DialogCard(child: NewTagGialog()),
                           );
+                          if (tag != null) {
+                            newNoteController.addTags(tag);
+                          }
                         },
                       ),
                     ],
@@ -227,9 +182,27 @@ class _MyWidgetState extends State<NewOrEidtNote> {
                 ),
                 Expanded(
                   flex: 5,
-                  child: Text(
-                    'no tags added',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Selector<NewNoteController, List<String>>(
+                    selector: (_, newNoteController) => newNoteController.tags,
+                    builder: (_, tags, _) => tags.isEmpty
+                        ? Text(
+                            'no tags added',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )
+                        : SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(
+                                tags.length,
+                                (index) => NoteTag(
+                                  lable: tags[index],
+                                  onClosed: () {
+                                    newNoteController.removeTag((index));
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
                   ),
                 ),
               ],
