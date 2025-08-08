@@ -41,7 +41,7 @@ class NoteCard extends StatelessWidget {
           children: <Widget>[
             if (note.title != null) ...[
               Text(
-                note.title,
+                note.title!,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
@@ -57,7 +57,7 @@ class NoteCard extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: List.generate(
-                    3,
+                    note.tags!.length,
                     (index) => NoteTag(lable: note.tags![index]),
                   ),
                 ),
@@ -68,23 +68,24 @@ class NoteCard extends StatelessWidget {
               if (isInGrid)
                 Expanded(
                   child: Text(
-                    note.content,
+                    note.content!,
                     // note.content!, in case the content be empty use this insted of   note.content,
                     style: TextStyle(color: gray700),
                   ),
                 )
               else
                 Text(
-                  note.content,
+                  note.content!,
                   style: TextStyle(color: gray700),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
             ],
+            Spacer(),
             Row(
               children: [
                 Text(
-                  DateFormat('dd MMM , y').format(      
+                  DateFormat('dd MMM , y').format(
                     DateTime.fromMicrosecondsSinceEpoch(note.dateCreated),
                   ),
 

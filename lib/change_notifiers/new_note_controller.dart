@@ -52,14 +52,14 @@ class NewNoteController extends ChangeNotifier {
 
   void saveNote(BuildContext context) {
     final String? newTitle = title.isNotEmpty ? title : null;
-    final String? newcontent = content.isNotEmpty ? content : null;
+    final String? newContent = content.isNotEmpty ? content : null;
     final now = DateTime.now().microsecondsSinceEpoch;
     final Note note = Note(
-      title: title,
-      content: content,
+      title:newTitle, 
+      content: newContent,
       dateCreated: now,
       dateModified: now,
-      tags: tags,
+      tags: tags, 
     );
 
     context.read<NotesProvider>().addNote(note);
