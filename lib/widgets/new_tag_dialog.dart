@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_notes/core/constans.dart';
+import 'package:personal_notes/widgets/note_button.dart';
 
 class NewTagGialog extends StatefulWidget {
   const NewTagGialog({super.key});
@@ -65,7 +66,7 @@ class _NewTagGialogState extends State<NewTagGialog> {
           ),
           validator: (value) {
             if (value!.trim().isEmpty) {
-              return 'no tage added';
+              return 'should not be empty or only space ';
             } else if (value.trim().length > 16) {
               return 'tag should not be more than 16 characters';
             }
@@ -77,31 +78,13 @@ class _NewTagGialogState extends State<NewTagGialog> {
         ),
         SizedBox(height: 24),
 
-        DecoratedBox(
-          decoration: BoxDecoration(
-            boxShadow: [BoxShadow(offset: Offset(2, 2), color: Colors.black)],
-            borderRadius: BorderRadius.circular(8),
-          ),
+        NoteButton(lable: 'Add', onPressed: (){
 
-          child: ElevatedButton(
-            onPressed: () {
               if (tagKey.currentState?.validate() ?? false) {
-                Navigator.pop(context, tagController.text.trim());
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primary,
-              foregroundColor: Colors.white,
-              side: BorderSide(color: Colors.black),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              elevation: 0,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: Text('Add '),
-          ),
-        ),
+          Navigator.pop(context, tagController.text.trim());
+        }
+          }, ),
+       
       ],
     );
   }

@@ -10,7 +10,7 @@ class NoteIconBottonOutline extends StatelessWidget {
     ,
     super.key});
   final IconData icon;
-  final VoidCallback OnPressed;
+  final VoidCallback? OnPressed;
   @override
   Widget build(BuildContext context) {
     return IconButton(

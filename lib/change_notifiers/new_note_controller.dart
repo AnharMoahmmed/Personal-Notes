@@ -49,7 +49,11 @@ class NewNoteController extends ChangeNotifier {
     _tags.removeAt(index);
     notifyListeners();
   }
-
+  bool get CanSaveNote {
+      final String? newTitle = title.isNotEmpty ? title : null;
+    final String? newContent = content.isNotEmpty ? content : null;
+    return newTitle != null  || newContent != null ;
+  }
   void saveNote(BuildContext context) {
     final String? newTitle = title.isNotEmpty ? title : null;
     final String? newContent = content.isNotEmpty ? content : null;
