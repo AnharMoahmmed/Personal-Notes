@@ -4,14 +4,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/widgets/confirmation_dialog.dart';
-
 import 'package:personal_notes/widgets/dialog_card.dart';
-import 'package:personal_notes/widgets/new_tag_dialog.dart';
-
-import 'package:personal_notes/widgets/note_icon_button.dart';
 import 'package:personal_notes/widgets/note_icon_button_outline.dart';
 import 'package:personal_notes/widgets/note_matedate.dart';
-import 'package:personal_notes/widgets/note_tag.dart';
 import 'package:provider/provider.dart';
 
 class NewOrEidtNote extends StatefulWidget {
@@ -26,6 +21,8 @@ class NewOrEidtNote extends StatefulWidget {
 class _MyWidgetState extends State<NewOrEidtNote> {
   late final NewNoteController newNoteController;
   late final FocusNode focusNode;
+  late final TextEditingController titelController;
+  late final TextEditingController ContentController;
 
   //gpt
   // final NewNoteController = Provider.of<NewNoteController>(context, listen: false);
@@ -38,6 +35,8 @@ class _MyWidgetState extends State<NewOrEidtNote> {
   void initState() {
     newNoteController = context.read<NewNoteController>();
     focusNode = FocusNode();
+    titelController = TextEditingController(text: newNoteController.title);
+    ContentController = TextEditingController(text: newNoteController.content);
     super.initState();
     // quillController = QuillController.basic();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -53,6 +52,8 @@ class _MyWidgetState extends State<NewOrEidtNote> {
   @override
   void dispose() {
     // quillController.dispose();
+    titelController.dispose();
+    ContentController.dispose();
     focusNode.dispose();
     super.dispose();
   }
@@ -133,6 +134,7 @@ class _MyWidgetState extends State<NewOrEidtNote> {
               Selector<NewNoteController, bool>(
                 selector: (context, controller) => controller.readOnly,
                 builder: (context, readOnly, child) => TextField(
+                  controller: titelController,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   decoration: InputDecoration(
                     hintText: 'Title here',
@@ -145,13 +147,14 @@ class _MyWidgetState extends State<NewOrEidtNote> {
                   },
                 ),
               ),
-              NoteMatedate(isNewnNote: widget.isNewnNote),
+              NoteMatedate(note: newNoteController.note),
               Expanded(
                 child: Selector<NewNoteController, bool>(
                   selector: (_, controller) => controller.readOnly,
                   builder: (_, readOnly, __) => Column(
                     children: [
                       TextField(
+                        controller: ContentController,
                         style: TextStyle(fontSize: 16),
                         decoration: InputDecoration(
                           hintText: 'Type here..',

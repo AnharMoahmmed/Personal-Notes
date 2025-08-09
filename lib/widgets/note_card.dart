@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/core/constans.dart';
+import 'package:personal_notes/core/utils.dart';
 import 'package:personal_notes/models/note.dart';
 import 'package:personal_notes/pages/new_or_edit_note.dart';
 import 'package:personal_notes/widgets/note_tag.dart';
+import 'package:provider/provider.dart';
 
 class NoteCard extends StatelessWidget {
   NoteCard({required this.isInGrid, required this.note, super.key});
@@ -18,7 +21,10 @@ class NoteCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NewOrEidtNote(isNewnNote: false),
+            builder: (context) => ChangeNotifierProvider(
+              create: (_) => NewNoteController()..note = note ,  // use the cascadt to assigine note to open the same note u preesed in newOrEidtNote 
+              child: NewOrEidtNote(isNewnNote: false),
+            ),
           ),
         );
       },
@@ -85,9 +91,7 @@ class NoteCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  DateFormat('dd MMM , y').format(
-                    DateTime.fromMicrosecondsSinceEpoch(note.dateCreated),
-                  ),
+                toShortDate(note.dateModified),
 
                   style: TextStyle(
                     fontSize: 12.0,
