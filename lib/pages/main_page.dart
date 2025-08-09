@@ -9,10 +9,10 @@ import 'package:personal_notes/widgets/no_notes.dart';
 import 'package:personal_notes/widgets/note_grid.dart';
 
 import 'package:personal_notes/widgets/note_fab.dart';
-import 'package:personal_notes/widgets/note_icon_button.dart';
 import 'package:personal_notes/widgets/note_icon_button_outline.dart';
 import 'package:personal_notes/widgets/note_list.dart';
 import 'package:personal_notes/search_field.dart';
+import 'package:personal_notes/widgets/view_options.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
@@ -22,13 +22,7 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-final List<String> dropDowenOptions = ['Date Modfied', 'Date change'];
-late String dropDowenValue = dropDowenOptions.first;
-
-bool isDescending = true;
-
-bool isGrid = true;
-
+ 
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
@@ -54,8 +48,8 @@ class _MainPageState extends State<MainPage> {
         },
       ),
       body: Consumer<NotesProvider>(
-        builder: (context, NotesProvider, child) {
-          final List<Note> notes = NotesProvider.notes;
+        builder: (context, notesProvider, child) {
+          final List<Note> notes = notesProvider.notes;
           return notes.isEmpty
               ? NoNotes()
               : Padding(
@@ -63,79 +57,11 @@ class _MainPageState extends State<MainPage> {
                   child: Column(
                     children: [
                       SearchField(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          children: [
-                            NoteIconButton(
-                              OnPressed: () {
-                                setState(() {
-                                  isDescending = !isDescending;
-                                });
-                              },
-                              icon: isDescending
-                                  ? FontAwesomeIcons.arrowDown
-                                  : FontAwesomeIcons.arrowUp,
-                              sized: 18,
-                            ),
-
-                            SizedBox(width: 16),
-                            DropdownButton(
-                              value: dropDowenValue,
-                              icon: Padding(
-                                padding: const EdgeInsets.only(left: 16),
-                                child: FaIcon(
-                                  FontAwesomeIcons.arrowDownWideShort,
-                                  size: 18,
-                                  color: Colors.blueGrey,
-                                ),
-                              ),
-                              underline: SizedBox.shrink(),
-                              borderRadius: BorderRadius.circular(16.0),
-                              isDense: true,
-                              items: dropDowenOptions
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Row(
-                                        children: [
-                                          Text(e),
-                                          if (e == dropDowenValue) ...[
-                                            SizedBox(width: 8.0),
-                                            Icon(Icons.check),
-                                          ],
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                              selectedItemBuilder: (context) =>
-                                  dropDowenOptions.map((e) => Text(e)).toList(),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  dropDowenValue = newValue!;
-                                });
-                              },
-                            ),
-                            Spacer(),
-                            NoteIconButton(
-                              OnPressed: () {
-                                setState(() {
-                                  isGrid = !isGrid;
-                                });
-                              },
-                              icon: isGrid
-                                  ? FontAwesomeIcons.tableCellsLarge
-                                  : FontAwesomeIcons.bars,
-
-                              sized: 18,
-                            ),
-                          ],
-                        ),
-                      ),
+                      ViewOptions()
+                           ,
 
                       Expanded(
-                        child: isGrid
+                        child: notesProvider.isGrid
                             ? notesGrid(notes: notes)
                             : NotesList(notes: notes),
                       ),
