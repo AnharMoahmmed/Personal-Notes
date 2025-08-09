@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/core/constans.dart';
+import 'package:personal_notes/core/dialogs.dart';
+import 'package:personal_notes/core/utils.dart';
+import 'package:personal_notes/models/note.dart';
 import 'package:personal_notes/widgets/dialog_card.dart';
 import 'package:personal_notes/widgets/new_tag_dialog.dart';
 import 'package:personal_notes/widgets/note_icon_button.dart';
@@ -9,8 +12,9 @@ import 'package:personal_notes/widgets/note_tag.dart';
 import 'package:provider/provider.dart';
 
 class NoteMatedate extends StatefulWidget {
-  const NoteMatedate({super.key, required this.isNewnNote});
-  final bool isNewnNote;
+  const NoteMatedate({super.key, required this.note});
+  // final bool isNewnNote;    // it is automatically a new note so no need fo this line
+  final Note? note;
 
   @override
   State<NoteMatedate> createState() => _NoteMatedateState();
@@ -29,7 +33,7 @@ class _NoteMatedateState extends State<NoteMatedate> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (!widget.isNewnNote) ...[
+        if (widget.note != null) ...[
           Row(
             children: [
               Expanded(
@@ -42,7 +46,7 @@ class _NoteMatedateState extends State<NoteMatedate> {
               Expanded(
                 flex: 5,
                 child: Text(
-                  '08 Aug 2025 , 12:08 PM',
+                  toLongDate(widget.note!.dateModified),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -60,7 +64,7 @@ class _NoteMatedateState extends State<NoteMatedate> {
               Expanded(
                 flex: 5,
                 child: Text(
-                  '08 Aug 2025 , 12:08 PM',
+                  toLongDate(widget.note!.dateCreated),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -78,9 +82,8 @@ class _NoteMatedateState extends State<NoteMatedate> {
                   NoteIconButton(
                     icon: FontAwesomeIcons.circlePlus,
                     OnPressed: () async {
-                      final String? tag = await showDialog<String?>(
+                      final String? tag = await ShowNewTagDialog(
                         context: context,
-                        builder: (context) => DialogCard(child: NewTagGialog()),
                       );
                       if (tag != null) {
                         newNoteController.addTags(tag);
@@ -108,6 +111,16 @@ class _NoteMatedateState extends State<NoteMatedate> {
                               lable: tags[index],
                               onClosed: () {
                                 newNoteController.removeTag((index));
+                              },
+                              onTap: () async {
+                                final String? tag = await ShowNewTagDialog(
+                                  context: context,
+                                  tag: tags[index],
+                                );
+
+                                if (tag != null && tag != tag[index]) {
+                                  newNoteController.updateTag(tag, index);
+                                }
                               },
                             ),
                           ),

@@ -3,7 +3,9 @@ import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/widgets/note_button.dart';
 
 class NewTagGialog extends StatefulWidget {
-  const NewTagGialog({super.key});
+  const NewTagGialog({super.key, this.tag});
+
+  final String? tag;
 
   @override
   State<NewTagGialog> createState() => _NewTagGialogState();
@@ -16,7 +18,7 @@ class _NewTagGialogState extends State<NewTagGialog> {
   @override
   void initState() {
     super.initState();
-    tagController = TextEditingController();
+    tagController = TextEditingController(text: widget.tag);
     tagKey = GlobalKey();
   }
 
@@ -78,13 +80,14 @@ class _NewTagGialogState extends State<NewTagGialog> {
         ),
         SizedBox(height: 24),
 
-        NoteButton(lable: 'Add', onPressed: (){
-
-              if (tagKey.currentState?.validate() ?? false) {
-          Navigator.pop(context, tagController.text.trim());
-        }
-          }, ),
-       
+        NoteButton(
+          lable: 'Add',
+          onPressed: () {
+            if (tagKey.currentState?.validate() ?? false) {
+              Navigator.pop(context, tagController.text.trim());
+            }
+          },
+        ),
       ],
     );
   }
