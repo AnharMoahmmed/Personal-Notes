@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+
 import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/change_notifiers/note_provider.dart';
 import 'package:personal_notes/core/constans.dart';
