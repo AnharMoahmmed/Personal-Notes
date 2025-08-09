@@ -22,7 +22,6 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
- 
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,10 @@ class _MainPageState extends State<MainPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ChangeNotifierProvider(create: (context) => NewNoteController(), child: NewOrEidtNote(isNewnNote: true)),
+              builder: (context) => ChangeNotifierProvider(
+                create: (context) => NewNoteController(),
+                child: NewOrEidtNote(isNewnNote: true),
+              ),
             ),
           );
         },
@@ -50,21 +52,30 @@ class _MainPageState extends State<MainPage> {
       body: Consumer<NotesProvider>(
         builder: (context, notesProvider, child) {
           final List<Note> notes = notesProvider.notes;
-          return notes.isEmpty
+          return notes.isEmpty && notesProvider.searchTerm.isEmpty
               ? NoNotes()
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
                       SearchField(),
-                      ViewOptions()
-                           ,
+                      if (notes.isNotEmpty) ...[
+                        ViewOptions(),
 
-                      Expanded(
-                        child: notesProvider.isGrid
-                            ? notesGrid(notes: notes)
-                            : NotesList(notes: notes),
-                      ),
+                        Expanded(
+                          child: notesProvider.isGrid
+                              ? notesGrid(notes: notes)
+                              : NotesList(notes: notes),
+                        ),
+                      ] else
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              'no notes found for your search "${notesProvider.searchTerm}"',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 );
@@ -73,4 +84,3 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
-

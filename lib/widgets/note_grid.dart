@@ -3,7 +3,7 @@ import 'package:personal_notes/models/note.dart';
 import 'package:personal_notes/widgets/note_card.dart';
 
 class notesGrid extends StatelessWidget {
-  const notesGrid({required this.notes, super.key});
+  const   notesGrid({required this.notes, super.key});
 
   final List<Note> notes;
 
