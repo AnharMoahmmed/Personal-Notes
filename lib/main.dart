@@ -1,10 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_notes/change_notifiers/note_provider.dart';
 import 'package:personal_notes/core/constans.dart';
+import 'package:personal_notes/firebase_options.dart';
 import 'package:personal_notes/pages/main_page.dart';
+import 'package:personal_notes/pages/registration_page.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -14,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create:(context)=> NotesProvider() ,
+      create: (context) => NotesProvider(),
       child: MaterialApp(
         title: 'personal notes 📒 ',
         theme: ThemeData(
@@ -30,7 +35,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const MainPage(),
+        home: const RegistrationPage(),
         debugShowCheckedModeBanner: false,
       ),
     );

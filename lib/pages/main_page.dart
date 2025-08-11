@@ -7,7 +7,6 @@ import 'package:personal_notes/models/note.dart';
 import 'package:personal_notes/pages/new_or_edit_note.dart';
 import 'package:personal_notes/widgets/no_notes.dart';
 import 'package:personal_notes/widgets/note_grid.dart';
-
 import 'package:personal_notes/widgets/note_fab.dart';
 import 'package:personal_notes/widgets/note_icon_button_outline.dart';
 import 'package:personal_notes/widgets/note_list.dart';

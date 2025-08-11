@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/widgets/note_button.dart';
+import 'package:personal_notes/widgets/note_form_field.dart';
 
 class NewTagGialog extends StatefulWidget {
   const NewTagGialog({super.key, this.tag});
@@ -40,32 +41,10 @@ class _NewTagGialogState extends State<NewTagGialog> {
           textAlign: TextAlign.left,
         ),
         SizedBox(height: 24),
-        TextFormField(
-          autofocus: true,
+        NoteFormField(
           key: tagKey,
-          controller: tagController,
-
-          decoration: InputDecoration(
-            hintText: 'add tag(< 16 characters)',
-            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-            isDense: true,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: primary),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: primary),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.red),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.red),
-            ),
-          ),
+          Controller: tagController,
+          hintText: 'Add  tag (< 16 characters)',
           validator: (value) {
             if (value!.trim().isEmpty) {
               return 'should not be empty or only space ';
@@ -77,6 +56,7 @@ class _NewTagGialogState extends State<NewTagGialog> {
           onChanged: (newValue) {
             tagKey.currentState?.validate();
           },
+           autofocus:  true,
         ),
         SizedBox(height: 24),
 
