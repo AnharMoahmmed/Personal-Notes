@@ -5,6 +5,7 @@ import 'package:personal_notes/change_notifiers/note_provider.dart';
 import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/models/note.dart';
 import 'package:personal_notes/pages/new_or_edit_note.dart';
+import 'package:personal_notes/services/auth_service.dart';
 import 'package:personal_notes/widgets/no_notes.dart';
 import 'package:personal_notes/widgets/note_grid.dart';
 import 'package:personal_notes/widgets/note_fab.dart';
@@ -31,7 +32,9 @@ class _MainPageState extends State<MainPage> {
         actions: [
           NoteIconBottonOutline(
             icon: FontAwesomeIcons.rightFromBracket,
-            OnPressed: () {},
+            OnPressed: () {
+              AuthService.logout();
+            },
           ),
         ],
       ),

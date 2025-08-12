@@ -144,16 +144,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ],
                       SizedBox(height: 48.0),
 
-                      NoteButton(
-                        lable: isREgisterMode ? 'Create my account' : 'Log in ',
-                        onPressed: () {
-                          if (formKey.currentState?.validate() ?? false) {
-                            registrationController
-                                .authenticateWithEamilAndPassword(
-                                  context: context,
-                                );
-                          }
-                        },
+                      Selector<RegistrationController, bool>(
+                        selector: (_, controller) => controller.isLoading,
+                        builder: (_, isLoading, _) => NoteButton(
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  if (formKey.currentState?.validate() ??
+                                      false) {
+                                    registrationController
+                                        .authenticateWithEamilAndPassword(
+                                          context: context,
+                                        );
+                                  }
+                                },
+                          child: isLoading
+                              ? SizedBox(
+                                  width: 24,
+                                  height: 24,
+
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  isREgisterMode
+                                      ? 'Create my account'
+                                      : 'Log in ',
+                                ),
+                        ),
                       ),
 
                       SizedBox(height: 32.0),

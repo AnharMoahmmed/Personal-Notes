@@ -4,12 +4,12 @@ import 'package:personal_notes/core/constans.dart';
 class NoteButton extends StatelessWidget {
   const NoteButton({
     super.key,
-    required this.lable,
+    required this.child,
     this.onPressed,
     this.isOutLine = false,
   });
 
-  final String lable;
+  final Widget child;
   final VoidCallback? onPressed;
   final bool isOutLine;
   @override
@@ -40,7 +40,7 @@ class NoteButton extends StatelessWidget {
           elevation: 0,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
-        child: Text(lable),
+        child:   child ,
       ),
     );
   }

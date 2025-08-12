@@ -2,6 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   AuthService._();
+  static User? get user => _auth.currentUser;
+  static final _auth = FirebaseAuth.instance;
+  static Stream<User?> get userStream => _auth.userChanges();
+  // static bool get isEmailVerfied => user?.emailVerified ?? false;
 
   static Future<void> register({
     required String fullname,
@@ -9,10 +13,16 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+      final credential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((credentioal) {
+            credentioal.user?.sendEmailVerification();
+            credentioal.user?.updateDisplayName(fullname);
+          });
     } catch (e) {
       rethrow;
     }
   }
+
+ static Future<void> logout() => _auth.signOut();
 }

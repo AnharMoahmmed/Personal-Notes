@@ -45,9 +45,18 @@ class RegistrationController extends ChangeNotifier {
 
   String get password => _password;
 
+  bool _isLoading = false;
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  bool get isLoading => _isLoading;
+
   Future<void> authenticateWithEamilAndPassword({
     required BuildContext context,
   }) async {
+    isLoading = true;
     try {
       if (_isRegisterMode) {
         await AuthService.register(
@@ -55,6 +64,21 @@ class RegistrationController extends ChangeNotifier {
           email: email,
           password: password,
         );
+        if (!context.mounted) return;
+
+        ShowMessageDialog(
+          context: context,
+          Message:
+              'A verifaction email was sent to the provided email adress. please confirm your email to produce to the app ',
+        );
+
+        //reload the user
+        // while (!AuthService.isEmailVerfied) {
+        // await  Future.delayed(
+        //     Duration(seconds: 5),
+        //     () => AuthService.user?.reload(),
+        //   );
+        // }
       } else {
         //sign in the user
       }
@@ -68,6 +92,8 @@ class RegistrationController extends ChangeNotifier {
       if (!context.mounted) return;
 
       ShowMessageDialog(context: context, Message: 'An knowen error accoured!');
+    } finally {
+      isLoading = false;
     }
   }
 }
