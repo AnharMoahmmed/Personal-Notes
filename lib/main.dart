@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_notes/change_notifiers/note_provider.dart';
+import 'package:personal_notes/change_notifiers/registration_controller.dart';
 import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/firebase_options.dart';
 import 'package:personal_notes/pages/main_page.dart';
@@ -18,13 +19,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => NotesProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => NotesProvider()),
+        ChangeNotifierProvider(create: (context) => RegistrationController()),
+      ],
       child: MaterialApp(
         title: 'personal notes 📒 ',
         theme: ThemeData(
           fontFamily: 'Poppins',
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: primary),
           appBarTheme: Theme.of(context).appBarTheme.copyWith(
             backgroundColor: Colors.transparent,
             titleTextStyle: const TextStyle(
