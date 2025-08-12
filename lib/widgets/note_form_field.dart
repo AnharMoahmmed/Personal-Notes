@@ -9,7 +9,8 @@ class NoteFormField extends StatelessWidget {
     this.hintText,
     this.validator,
     this.onChanged,
-    this.autofocus = false, this.filled ,
+    this.autofocus = false, this.filled, this.labelText, this.suffixIcon ,
+      this.obscureText = false,   this.textCapitalization  = TextCapitalization.none, this.textInputAction, this.keyboardType
      
   });
 
@@ -19,6 +20,14 @@ class NoteFormField extends StatelessWidget {
   final void Function(String)? onChanged;
   final bool autofocus ; 
   final bool? filled;
+  final String? labelText;
+  final Widget? suffixIcon;
+  final bool obscureText   ;
+  final TextCapitalization textCapitalization;
+
+  final TextInputAction? textInputAction ;
+
+  final TextInputType? keyboardType ;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +41,8 @@ class NoteFormField extends StatelessWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
         isDense: true,
         filled: filled,
+        labelText:labelText ,
+        suffixIcon: suffixIcon,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: primary),
@@ -51,6 +62,10 @@ class NoteFormField extends StatelessWidget {
       ),
       validator: validator,
       onChanged: onChanged,
+      obscureText:  obscureText,
+      textCapitalization:  textCapitalization ,
+      textInputAction: textInputAction ,
+      keyboardType: keyboardType,
     );
   }
 }

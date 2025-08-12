@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:personal_notes/widgets/confirmation_dialog.dart';
-import 'package:personal_notes/widgets/dialog_card.dart';
+import 'package:personal_notes/widgets/message_dialog.dart';
 import 'package:personal_notes/widgets/new_tag_dialog.dart';
 
 Future<String?> ShowNewTagDialog({required BuildContext context, String? tag}) {
   return showDialog<String?>(
     context: context,
-    builder: (context) => DialogCard(child: NewTagGialog(tag: tag)),
+    builder: (context) => NewTagGialog(tag: tag),
   );
 }
 
 Future<bool?> ShowConfirmationDialog({required BuildContext context}) {
   return showDialog<bool?>(
     context: context,
-    builder: (_) => DialogCard(child: ConfirmationDialog()),
+    builder: (_) => ConfirmationDialog(title: 'Do You want to save the NOTE?',),
+  );
+}
+
+
+
+
+
+
+
+Future<bool?> ShowMessageDialog({required BuildContext context, required String Message}) {
+  return showDialog<bool?>(
+    context: context,
+    builder: (_) => MessageDialog(message: Message,),
   );
 }
