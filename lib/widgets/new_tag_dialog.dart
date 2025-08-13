@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/widgets/dialog_card.dart';
 import 'package:personal_notes/widgets/note_button.dart';
 import 'package:personal_notes/widgets/note_form_field.dart';
@@ -63,7 +62,7 @@ class _NewTagGialogState extends State<NewTagGialog> {
           SizedBox(height: 24),
       
           NoteButton(
-            lable: 'Add',
+            child:Text( 'Add'),
             onPressed: () {
               if (tagKey.currentState?.validate() ?? false) {
                 Navigator.pop(context, tagController.text.trim());

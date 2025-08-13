@@ -26,7 +26,7 @@ class MessageDialog extends StatelessWidget {
               
               SizedBox(width: 8.0),
               NoteButton(
-                lable: 'OK',
+                child:Text( 'OK'),
                 onPressed: () => Navigator.pop(context),
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_notes/change_notifiers/note_provider.dart';
@@ -6,6 +7,7 @@ import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/firebase_options.dart';
 import 'package:personal_notes/pages/main_page.dart';
 import 'package:personal_notes/pages/registration_page.dart';
+import 'package:personal_notes/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -39,7 +41,15 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const RegistrationPage(),
+        home: StreamBuilder<User?>(
+          stream: AuthService.userStream,
+          builder: (context, snapshot) {
+            return snapshot.hasData //&& AuthService.isEmailVerfied
+                ? const MainPage()
+                : RegistrationPage();
+          },
+        ),
+
         debugShowCheckedModeBanner: false,
       ),
     );

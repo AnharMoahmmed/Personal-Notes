@@ -5,8 +5,6 @@ import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/core/dialogs.dart';
 import 'package:personal_notes/core/utils.dart';
 import 'package:personal_notes/models/note.dart';
-import 'package:personal_notes/widgets/dialog_card.dart';
-import 'package:personal_notes/widgets/new_tag_dialog.dart';
 import 'package:personal_notes/widgets/note_icon_button.dart';
 import 'package:personal_notes/widgets/note_tag.dart';
 import 'package:provider/provider.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/change_notifiers/note_provider.dart';
 import 'package:personal_notes/enums/order_options.dart';
-import 'package:personal_notes/pages/main_page.dart';
 import 'package:personal_notes/widgets/note_icon_button.dart';
 import 'package:provider/provider.dart';
 

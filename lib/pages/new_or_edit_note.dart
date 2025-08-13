@@ -4,8 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/core/dialogs.dart';
-import 'package:personal_notes/widgets/confirmation_dialog.dart';
-import 'package:personal_notes/widgets/dialog_card.dart';
+import 'package:personal_notes/widgets/note_back_botton.dart';
 import 'package:personal_notes/widgets/note_icon_button_outline.dart';
 import 'package:personal_notes/widgets/note_matedate.dart';
 import 'package:provider/provider.dart';
@@ -69,7 +68,7 @@ class _MyWidgetState extends State<NewOrEidtNote> {
           Navigator.pop(context);
           return; //this whene check ✔️  and there is nothig written ..> to not show dialog
         }
-        final bool? shouldSave = await ShowConfirmationDialog(context: context);
+        final bool? shouldSave = await ShowConfirmationDialog(context: context );
 
         if (shouldSave == null) return;
         if (!context.mounted) return;
@@ -81,15 +80,7 @@ class _MyWidgetState extends State<NewOrEidtNote> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.isNewnNote ? 'New Note' : 'edit note'),
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: NoteIconBottonOutline(
-              OnPressed: () {
-                Navigator.maybePop(context);
-              },
-              icon: FontAwesomeIcons.chevronLeft,
-            ),
-          ),
+          leading: NoteBackButton(),
           actions: [
             Selector<NewNoteController, bool>(
               selector: (context, newNoteController) =>
