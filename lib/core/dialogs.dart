@@ -10,22 +10,22 @@ Future<String?> ShowNewTagDialog({required BuildContext context, String? tag}) {
   );
 }
 
-Future<bool?> ShowConfirmationDialog({required BuildContext context}) {
+Future<bool?> ShowConfirmationDialog({
+  required BuildContext context,
+  
+}) {
   return showDialog<bool?>(
     context: context,
-    builder: (_) => ConfirmationDialog(title: 'Do You want to save the NOTE?',),
+    builder: (_) => ConfirmationDialog(title: 'Do You want to save the NOTE?'),
   );
 }
 
-
-
-
-
-
-
-Future<bool?> ShowMessageDialog({required BuildContext context, required String Message}) {
+Future<bool?> ShowMessageDialog({
+  required BuildContext context,
+  required String Message,
+}) {
   return showDialog<bool?>(
     context: context,
-    builder: (_) => MessageDialog(message: Message,),
+    builder: (_) => MessageDialog(message: Message),
   );
 }

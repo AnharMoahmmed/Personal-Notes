@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/change_notifiers/registration_controller.dart';
 import 'package:personal_notes/core/constans.dart';
 import 'package:personal_notes/core/validator.dart';
+import 'package:personal_notes/pages/recover_password.dart';
 import 'package:personal_notes/widgets/note_button.dart';
 import 'package:personal_notes/widgets/note_form_field.dart';
 import 'package:personal_notes/widgets/note_icon_button_outline.dart';
@@ -133,16 +134,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       SizedBox(height: 11.0),
                       if (!isREgisterMode) ...[
-                        Text(
-                          'Forgate Password ',
-                          style: TextStyle(
-                            color: primary,
-                            fontWeight: FontWeight.bold,
+                        GestureDetector(
+                          child: Text(
+                            'Forgate Password ',
+                            style: TextStyle(
+                              color: primary,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => RecoverPassword(),
+                              ),
+                            );
+                          },
                         ),
                         SizedBox(height: 24.0),
                       ],
+
                       SizedBox(height: 48.0),
+                      SizedBox(
+                        height: 48,
+
+                        
+                      ),
+                      const SizedBox(height: 32),
 
                       Selector<RegistrationController, bool>(
                         selector: (_, controller) => controller.isLoading,
@@ -157,6 +175,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                           context: context,
                                         );
                                   }
+
+                                  // //gpt help
+                                  // if (formKey.currentState?.validate() ??
+                                  //     false) {
+                                  //   await Future.microtask(() {
+                                  //     registrationController
+                                  //         .authenticateWithEamilAndPassword(
+                                  //           context: context,
+                                  //         );
+                                  //   });
+                                  // }
                                 },
                           child: isLoading
                               ? SizedBox(
@@ -247,3 +276,4 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 }
+ 

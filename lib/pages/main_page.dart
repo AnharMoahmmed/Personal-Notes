@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/change_notifiers/note_provider.dart';
 import 'package:personal_notes/core/constans.dart';
+import 'package:personal_notes/core/dialogs.dart';
 import 'package:personal_notes/models/note.dart';
 import 'package:personal_notes/pages/new_or_edit_note.dart';
 import 'package:personal_notes/services/auth_service.dart';
@@ -32,8 +33,13 @@ class _MainPageState extends State<MainPage> {
         actions: [
           NoteIconBottonOutline(
             icon: FontAwesomeIcons.rightFromBracket,
-            OnPressed: () {
-              AuthService.logout();
+            OnPressed: () async {
+              final bool shouldLogout =
+                  await ShowConfirmationDialog(context: context) ?? false;
+
+              if (shouldLogout) {
+                AuthService.logout();
+              }
             },
           ),
         ],
