@@ -9,6 +9,9 @@ import 'package:personal_notes/pages/main_page.dart';
 import 'package:personal_notes/pages/registration_page.dart';
 import 'package:personal_notes/services/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart';
+ 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +47,8 @@ class MyApp extends StatelessWidget {
         home: StreamBuilder<User?>(
           stream: AuthService.userStream,
           builder: (context, snapshot) {
-            return snapshot.hasData //&& AuthService.isEmailVerfied
+            return snapshot
+                    .hasData //&& AuthService.isEmailVerfied
                 ? const MainPage()
                 : RegistrationPage();
           },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:personal_notes/change_notifiers/new_note_controller.dart';
 import 'package:personal_notes/change_notifiers/note_provider.dart';
@@ -15,6 +16,8 @@ import 'package:personal_notes/widgets/note_list.dart';
 import 'package:personal_notes/search_field.dart';
 import 'package:personal_notes/widgets/view_options.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/browser.dart';
+import 'package:timezone/data/latest.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -24,6 +27,33 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  ///initestate for local notification
+  @override
+  void initState() {
+    // init();
+     Future.microtask(() => init());
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Future<void> init() async {
+    initializeTimeZones();
+    //! https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+    setLocalLocation(getLocation('Asia/Aden'));
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/launcher_icon',
+    );
+    const DarwinInitializationSettings iosSettings =
+        DarwinInitializationSettings();
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: androidSettings, iOS: iosSettings);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
