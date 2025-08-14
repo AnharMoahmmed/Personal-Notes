@@ -7,11 +7,22 @@ import 'package:provider/provider.dart';
 class NewNoteController extends ChangeNotifier {
   Note? _note;
 
+  int? _reminderAt; 
+
+  int? get reminderAt => _reminderAt;
+
+  set reminderAt(int? value) {
+    _reminderAt = value;
+    notifyListeners();
+  }
+
+
   set note(Note? value) {
     _note = value;
     _title = _note!.title ?? '';
     _content = _note!.content ?? '';
     _tags.addAll(_note!.tags ?? []);
+    _reminderAt = _note!.reminderAt; 
 
     notifyListeners();
   }
@@ -98,11 +109,14 @@ class NewNoteController extends ChangeNotifier {
     final String? newContent = content.isNotEmpty ? content : null;
     final now = DateTime.now().microsecondsSinceEpoch;
     final Note note = Note(
+      
       title: newTitle,
       content: newContent,
       dateCreated: isNewNote ? now : _note!.dateCreated,
       dateModified: now,
       tags: tags,
+       reminderAt= _reminderAt,
+      
     );
 
     final notesProvider = context.read<NotesProvider>();

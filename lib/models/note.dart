@@ -1,5 +1,5 @@
 class Note {
-  Note({
+  Note(this.reminderAt, {
     required this.title,
     required this.content,
     // required this.contentJson,
@@ -13,4 +13,5 @@ class Note {
   final int dateCreated;
   final int dateModified;
   final List<String>? tags;
+   final int? reminderAt;
 }

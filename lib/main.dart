@@ -8,19 +8,27 @@ import 'package:personal_notes/firebase_options.dart';
 import 'package:personal_notes/pages/main_page.dart';
 import 'package:personal_notes/pages/registration_page.dart';
 import 'package:personal_notes/services/auth_service.dart';
+import 'package:personal_notes/services/notification_service,dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart';
+  
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:timezone/timezone.dart';
  
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().requestPermissions();
+
+   await NotificationService().init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+   runApp(MyApp(navigatorKey: navigatorKey));
+
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GlobalKey<NavigatorState> navigatorKey;
+  const MyApp({super.key, required this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +36,13 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => NotesProvider()),
         ChangeNotifierProvider(create: (context) => RegistrationController()),
+          ChangeNotifierProvider(
+          create: (context) => NotesProvider()..loadNotes(),
+        ),
+        ChangeNotifierProvider(create: (context) => RegistrationController()),
       ],
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         title: 'personal notes 📒 ',
         theme: ThemeData(
           fontFamily: 'Poppins',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_notes/core/extension.dart';
 import 'package:personal_notes/enums/order_options.dart';
 import 'package:personal_notes/models/note.dart';
+import 'package:personal_notes/services/auth_service.dart';
 
 class NotesProvider extends ChangeNotifier {
   final List<Note> _notes = [];
@@ -79,4 +80,8 @@ class NotesProvider extends ChangeNotifier {
   }
 
   String get searchTerm => _searchTrem;
+
+  void loadNotes() {
+    // No action needed for a local-only list that starts empty.
+  }
 }

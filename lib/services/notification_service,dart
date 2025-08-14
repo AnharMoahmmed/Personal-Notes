@@ -1,0 +1,110 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:personal_notes/change_notifiers/new_note_controller.dart';
+import 'package:personal_notes/change_notifiers/note_provider.dart';
+import 'package:personal_notes/main.dart'; // Import to get the navigatorKey
+import 'package:personal_notes/pages/new_or_edit_note.dart';
+import 'package:provider/provider.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+class NotificationService {
+  static final NotificationService _notificationService = NotificationService._internal();
+  factory NotificationService() {
+    return _notificationService;
+  }
+  NotificationService._internal();
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> init() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+
+    tz.initializeTimeZones();
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        final String? payload = response.payload;
+        if (payload == null || payload.isEmpty) return;
+
+        final context = navigatorKey.currentContext;
+        if (context == null) return;
+
+        final notesProvider = context.read<NotesProvider>();
+        final noteToOpen = notesProvider.findNoteByCreationDate(int.parse(payload));
+
+        if (noteToOpen != null) {
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (context) => ChangeNotifierProvider(
+                create: (_) => NewNoteController()..note = noteToOpen,
+                child: const NewOrEidtNote(isNewnNote: false),
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> requestPermissions() async {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+  }
+
+  // This code is correct for flutter_local_notifications v17.0.0 and newer.
+  Future<void> scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledTime,
+    required String payload,
+  }) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'main_channel',
+          'Main Channel',
+          channelDescription: 'Main channel for notifications',
+          importance: Importance.max,
+          priority: Priority.high,
+          icon: '@mipmap/ic_launcher',
+        ),
+        iOS: DarwinNotificationDetails(
+          sound: 'default.wav',
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exact_while_idle,
+      payload: payload,
+    );
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
+}

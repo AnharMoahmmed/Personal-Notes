@@ -16,6 +16,13 @@ class NoteCard extends StatelessWidget {
   bool isInGrid = true;
   final Note note;
 
+  //DATE REMINDER
+
+  String toShortDateTime(DateTime date) {
+    return "${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')} "
+        "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -94,21 +101,46 @@ class NoteCard extends StatelessWidget {
             Spacer(),
             Row(
               children: [
-                Text(
-                  toShortDate(note.dateModified),
+                Expanded(
+                  child: Text(
+                    toShortDate(note.dateModified),
 
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                    color: gray500,
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w600,
+                      color: gray500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Spacer(),
+                // Spacer(),
+                //TIME
+                if (note.reminderAt != null) ...[
+                  SizedBox(width: 8),
+                  Icon(Icons.alarm, size: 14, color: gray500),
+                  SizedBox(width: 2),
+                  Flexible(
+                    child: Text(
+                      toShortDateTime(
+                        DateTime.fromMicrosecondsSinceEpoch(note.reminderAt!),
+                      ),
+
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
+                        color: gray500,
+                      ),
+                    ),
+                  ),
+                ],
                 GestureDetector(
                   onTap: () async {
                     final shouldDelete =
-                        await ShowConfirmationDialog(context: context, ) ?? false;
-                    if(shouldDelete && context.mounted) {
+                        await ShowConfirmationDialog(context: context) ?? false;
+                    if (shouldDelete && context.mounted) {
                       context.read<NotesProvider>().deleteNote(note);
                     }
                   },
