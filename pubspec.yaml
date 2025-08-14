@@ -31,18 +31,20 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.9.0
   provider: ^6.1.5
-  intl: ^0.20.2
-  firebase_core: ^4.0.0
-  firebase_auth: ^6.0.1
-  flutter_local_notifications: ^19.4.0
-  timezone: ^0.10.1
-  flutter_native_timezone: ^2.0.0
-  web: ^1.1.1
+  intl: ^0.19.0
+
+  # UPDATED TO MODERN, COMPATIBLE VERSIONS
+  firebase_core: ^3.1.0
+  firebase_auth: ^5.1.0
+  flutter_local_notifications: ^17.2.1
+
+  timezone: ^0.9.4
+  
+  # THE CORRECT, MAINTAINED TIMEZONE PACKAGE
+  flutter_timezone: ^3.0.1
  
 
 dev_dependencies:

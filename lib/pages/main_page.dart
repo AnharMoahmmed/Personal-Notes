@@ -16,8 +16,9 @@ import 'package:personal_notes/widgets/note_list.dart';
 import 'package:personal_notes/search_field.dart';
 import 'package:personal_notes/widgets/view_options.dart';
 import 'package:provider/provider.dart';
-import 'package:timezone/browser.dart';
-import 'package:timezone/data/latest.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tzdata;
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -34,17 +35,19 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     // init();
-     Future.microtask(() => init());
+    Future.microtask(() => init());
     // TODO: implement initState
     super.initState();
   }
 
   Future<void> init() async {
-    initializeTimeZones();
-    //! https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-    setLocalLocation(getLocation('Asia/Aden'));
+    // This line replaces the old, browser-specific setup
+    tzdata.initializeTimeZones();
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
+
     const androidSettings = AndroidInitializationSettings(
-      '@mipmap/launcher_icon',
+      '@mipmap/ic_launcher', // Corrected from launcher_icon
     );
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings();
